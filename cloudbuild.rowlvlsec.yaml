@@ -1,0 +1,24 @@
+steps:
+  - name: 'gcr.io/kittycorn-public/deploy-kittycorn-cdc:v1.5'
+    id: config_reader
+    entrypoint: /bin/bash
+    waitFor: ['-']
+    args:
+      - -c
+      - |
+        # Processing config
+        source load_env_from_config.sh \
+          "${_PJID_SRC}" "${_PJID_TRT}" \
+          "${_GCS_LOG_BUCKET}" "${_GCS_BUCKET}" \
+          "${_DS_CDC}" "${_DS_CDC_SEC}" \
+          "${_DEPLOY_CDC}"
+        
+        if [[ "$${_DEPLOY_CDC_}" == "true" ]] ; then
+          echo "Running config reader"
+          cd ./src/ && python config_reader.py $$_PJID_SRC_ $$_DS_CDC_ $$_PJID_TGT_ $$_DS_CDC_SEC_
+        fi
+
+logsBucket: 'gs://$_GCS_LOG_BUCKET'
+timeout: 7200s
+options:
+  substitution_option: "ALLOW_LOOSE"
