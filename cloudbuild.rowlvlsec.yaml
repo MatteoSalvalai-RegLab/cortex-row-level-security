@@ -18,7 +18,7 @@ steps:
           cd ./src/ && python config_reader.py $$_PJID_SRC_ $$_DS_CDC_ $$_PJID_TGT_ $$_DS_CDC_SEC_
         fi
 
-logsBucket: 'gs://$_GCS_LOG_BUCKET'
+logsBucket: 'gs://$_GCS_LOG_BUCKET/logs'
 timeout: 7200s
 options:
   substitution_option: "ALLOW_LOOSE"
